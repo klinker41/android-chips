@@ -19,6 +19,8 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.MultiAutoCompleteTextView;
 import com.android.ex.chips.BaseRecipientAdapter;
 import com.android.ex.chips.RecipientEditTextView;
@@ -47,6 +49,14 @@ public class MainActivity extends Activity {
                 }
             }
         }, 5000);
+
+        final ImageButton showAll = (ImageButton) findViewById(R.id.show_all);
+        showAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                phoneRetv.showAllContacts();
+            }
+        });
     }
 
 }

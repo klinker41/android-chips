@@ -705,7 +705,7 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
             // was selected.
             if (photoBytes == null && contact.getPhotoThumbnailUri() != null) {
                 // TODO: cache this in the recipient entry?
-                getAdapter().fetchPhoto(contact, contact.getPhotoThumbnailUri());
+                getAdapter().fetchPhoto(contact, contact.getPhotoThumbnailUri(), getContext().getContentResolver());
                 photoBytes = contact.getPhotoBytes();
             }
             if (photoBytes != null) {
@@ -2318,6 +2318,18 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
     public void removeTextChangedListener(TextWatcher watcher) {
         mTextWatcher = null;
         super.removeTextChangedListener(watcher);
+    }
+
+    public void showAllContacts() {
+        setThreshold(0);
+        dismissDropDownOnItemSelected(false);
+        getHandler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                setText("~");
+                setSelection(1);
+            }
+        }, 250);
     }
 
     private class RecipientTextWatcher implements TextWatcher {

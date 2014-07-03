@@ -169,6 +169,7 @@ public class DropdownChipLayouter {
                             photoBytes.length));
                         view.setImageBitmap(photo);
                     } else {
+                        BaseRecipientAdapter.tryFetchPhoto(entry, mContext.getContentResolver(), null, true, -1);
                         view.setImageResource(getDefaultPhotoResId());
                     }
                     break;

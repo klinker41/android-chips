@@ -63,7 +63,7 @@ import java.util.Set;
 public class BaseRecipientAdapter extends BaseAdapter implements Filterable, AccountSpecifier {
     private static final String TAG = "BaseRecipientAdapter";
 
-    private static final boolean DEBUG = false;
+    private static final boolean DEBUG = true;
 
     /**
      * The preferred number of results to be retrieved. This number may be
@@ -84,7 +84,7 @@ public class BaseRecipientAdapter extends BaseAdapter implements Filterable, Acc
     static final String PRIMARY_ACCOUNT_TYPE = "type_for_primary_account";
 
     /** The number of photos cached in this Adapter. */
-    private static final int PHOTO_CACHE_SIZE = 20;
+    private static final int PHOTO_CACHE_SIZE = 200;
 
     /**
      * The "Waiting for more contacts" message will be displayed if search is not complete
@@ -229,18 +229,22 @@ public class BaseRecipientAdapter extends BaseAdapter implements Filterable, Acc
                         + Thread.currentThread());
             }
 
+            if (constraint == null) {
+                constraint = "~";
+            }
+
             final FilterResults results = new FilterResults();
             Cursor defaultDirectoryCursor = null;
             Cursor directoryCursor = null;
+            boolean limitResults = true;
 
-            if (TextUtils.isEmpty(constraint)) {
-                clearTempEntries();
-                // Return empty results.
-                return results;
+            if (constraint.equals("~")) {
+                limitResults = false;
+                constraint = " ";
             }
 
             try {
-                defaultDirectoryCursor = doQuery(constraint, mPreferredMaxResultCount,
+                defaultDirectoryCursor = doQuery(constraint, limitResults ? mPreferredMaxResultCount : -1,
                         null /* directoryId */);
 
                 if (defaultDirectoryCursor == null) {
@@ -273,7 +277,7 @@ public class BaseRecipientAdapter extends BaseAdapter implements Filterable, Acc
                     // not enough, we search remote directories, which will take longer time.
                     final int limit = mPreferredMaxResultCount - existingDestinations.size();
                     final List<DirectorySearchParams> paramsList;
-                    if (limit > 0) {
+                    if (limit > 0 && limitResults) {
                         if (DEBUG) {
                             Log.d(TAG, "More entries should be needed (current: "
                                     + existingDestinations.size()
@@ -501,7 +505,7 @@ public class BaseRecipientAdapter extends BaseAdapter implements Filterable, Acc
      */
     private CharSequence mCurrentConstraint;
 
-    private final LruCache<Uri, byte[]> mPhotoCacheMap;
+    private static LruCache<Uri, byte[]> mPhotoCacheMap;
 
     /**
      * Handler specific for maintaining "Waiting for more contacts" message, which will be shown
@@ -555,7 +559,9 @@ public class BaseRecipientAdapter extends BaseAdapter implements Filterable, Acc
         mContentResolver = context.getContentResolver();
         mInflater = LayoutInflater.from(context);
         mPreferredMaxResultCount = preferredMaxResultCount;
-        mPhotoCacheMap = new LruCache<Uri, byte[]>(PHOTO_CACHE_SIZE);
+        if (mPhotoCacheMap == null) {
+            mPhotoCacheMap = new LruCache<Uri, byte[]>(PHOTO_CACHE_SIZE);
+        }
         mQueryType = queryMode;
 
         if (queryMode == QUERY_TYPE_EMAIL) {
@@ -741,20 +747,21 @@ public class BaseRecipientAdapter extends BaseAdapter implements Filterable, Acc
             for (int i = 0; i < size; i++) {
                 RecipientEntry entry = entryList.get(i);
                 entries.add(entry);
-                tryFetchPhoto(entry);
+                tryFetchPhoto(entry, mContentResolver, this, false, i);
                 validEntryCount++;
             }
-            if (validEntryCount > mPreferredMaxResultCount) {
-                break;
-            }
+//            if (validEntryCount > mPreferredMaxResultCount) {
+//                break;
+//            }
         }
         if (validEntryCount <= mPreferredMaxResultCount) {
-            for (RecipientEntry entry : nonAggregatedEntries) {
-                if (validEntryCount > mPreferredMaxResultCount) {
-                    break;
-                }
+            for (int i = 0; i < nonAggregatedEntries.size(); i++) {
+                RecipientEntry entry = nonAggregatedEntries.get(i);
+//                if (validEntryCount > mPreferredMaxResultCount) {
+//                    break;
+//                }
                 entries.add(entry);
-                tryFetchPhoto(entry);
+                tryFetchPhoto(entry, mContentResolver, this, false, i);
 
                 validEntryCount++;
             }
@@ -791,19 +798,21 @@ public class BaseRecipientAdapter extends BaseAdapter implements Filterable, Acc
         return mTempEntries != null ? mTempEntries : mEntries;
     }
 
-    private void tryFetchPhoto(final RecipientEntry entry) {
-        final Uri photoThumbnailUri = entry.getPhotoThumbnailUri();
-        if (photoThumbnailUri != null) {
-            final byte[] photoBytes = mPhotoCacheMap.get(photoThumbnailUri);
-            if (photoBytes != null) {
-                entry.setPhotoBytes(photoBytes);
-                // notifyDataSetChanged() should be called by a caller.
-            } else {
-                if (DEBUG) {
-                    Log.d(TAG, "No photo cache for " + entry.getDisplayName()
-                            + ". Fetch one asynchronously");
+    public static void tryFetchPhoto(final RecipientEntry entry, ContentResolver mContentResolver, BaseAdapter adapter, boolean forceLoad, int position) {
+        if (forceLoad || position <= 20) {
+            final Uri photoThumbnailUri = entry.getPhotoThumbnailUri();
+            if (photoThumbnailUri != null) {
+                final byte[] photoBytes = mPhotoCacheMap.get(photoThumbnailUri);
+                if (photoBytes != null) {
+                    entry.setPhotoBytes(photoBytes);
+                    // notifyDataSetChanged() should be called by a caller.
+                } else {
+                    if (DEBUG) {
+                        Log.d(TAG, "No photo cache for " + entry.getDisplayName()
+                                + ". Fetch one asynchronously");
+                    }
+                    fetchPhotoAsync(entry, photoThumbnailUri, adapter, mContentResolver);
                 }
-                fetchPhotoAsync(entry, photoThumbnailUri);
             }
         }
     }
@@ -812,7 +821,7 @@ public class BaseRecipientAdapter extends BaseAdapter implements Filterable, Acc
     // copying from the inputstream to the output stream.
     private static final int BUFFER_SIZE = 1024*16;
 
-    private void fetchPhotoAsync(final RecipientEntry entry, final Uri photoThumbnailUri) {
+    private static void fetchPhotoAsync(final RecipientEntry entry, final Uri photoThumbnailUri, final BaseAdapter adapter, final ContentResolver mContentResolver) {
         final AsyncTask<Void, Void, byte[]> photoLoadTask = new AsyncTask<Void, Void, byte[]>() {
             @Override
             protected byte[] doInBackground(Void... params) {
@@ -861,14 +870,15 @@ public class BaseRecipientAdapter extends BaseAdapter implements Filterable, Acc
                 entry.setPhotoBytes(photoBytes);
                 if (photoBytes != null) {
                     mPhotoCacheMap.put(photoThumbnailUri, photoBytes);
-                    notifyDataSetChanged();
+                    if (adapter != null)
+                        adapter.notifyDataSetChanged();
                 }
             }
         };
         photoLoadTask.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
     }
 
-    protected void fetchPhoto(final RecipientEntry entry, final Uri photoThumbnailUri) {
+    protected static void fetchPhoto(final RecipientEntry entry, final Uri photoThumbnailUri, final ContentResolver mContentResolver) {
         byte[] photoBytes = mPhotoCacheMap.get(photoThumbnailUri);
         if (photoBytes != null) {
             entry.setPhotoBytes(photoBytes);
@@ -923,10 +933,11 @@ public class BaseRecipientAdapter extends BaseAdapter implements Filterable, Acc
     }
 
     private Cursor doQuery(CharSequence constraint, int limit, Long directoryId) {
-        final Uri.Builder builder = mQuery.getContentFilterUri().buildUpon()
-                .appendPath(constraint.toString())
-                .appendQueryParameter(ContactsContract.LIMIT_PARAM_KEY,
-                        String.valueOf(limit + ALLOWANCE_FOR_DUPLICATES));
+        final Uri.Builder builder = mQuery.getContentFilterUri().buildUpon();
+        builder.appendPath(constraint.toString());
+        builder.appendQueryParameter(ContactsContract.LIMIT_PARAM_KEY,
+                String.valueOf(limit + ALLOWANCE_FOR_DUPLICATES));
+
         if (directoryId != null) {
             builder.appendQueryParameter(ContactsContract.DIRECTORY_PARAM_KEY,
                     String.valueOf(directoryId));
@@ -937,7 +948,8 @@ public class BaseRecipientAdapter extends BaseAdapter implements Filterable, Acc
         }
         final long start = System.currentTimeMillis();
         final Cursor cursor = mContentResolver.query(
-                builder.build(), mQuery.getProjection(), null, null, null);
+                limit == -1 ? mQuery.getContentUri() : builder.build(), mQuery.getProjection(), null, null,
+                limit == -1 ? ContactsContract.Contacts.DISPLAY_NAME + " ASC" : null);
         final long end = System.currentTimeMillis();
         if (DEBUG) {
             Log.d(TAG, "Time for autocomplete (query: " + constraint
