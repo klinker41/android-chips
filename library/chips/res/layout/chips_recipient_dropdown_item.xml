@@ -44,7 +44,7 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp">
         <TextView android:id="@android:id/title"
-                  android:textColor="@drawable/list_item_font_primary"
+                  android:alpha=".87"
                   android:textSize="16sp"
                   android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
@@ -52,7 +52,7 @@
                   android:ellipsize="end"
                   style="@style/ChipTitleStyle" />
         <TextView android:id="@android:id/text1"
-                  android:textColor="@drawable/list_item_font_secondary"
+                  android:alpha=".54"
                   android:textSize="14sp"
                   android:layout_width="wrap_content"
                   android:layout_height="wrap_content"

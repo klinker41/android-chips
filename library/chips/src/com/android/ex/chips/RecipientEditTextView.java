@@ -280,6 +280,8 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
 
     private boolean mDismissPopupOnClick = true;
 
+    private ItemSelectedListener itemSelectedListener;
+
     public RecipientEditTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
         setChipDimensions(context, attrs);
@@ -1764,6 +1766,10 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
             return;
         }
         submitItemAtPosition(position);
+
+        if (itemSelectedListener != null) {
+            itemSelectedListener.onItemSelected();
+        }
     }
 
     private void submitItemAtPosition(int position) {
@@ -3017,5 +3023,13 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
 
     public void dismissDropDownOnItemSelected(boolean dismiss) {
         mDismissPopupOnClick = dismiss;
+    }
+
+    public void setPostSelectedAction(ItemSelectedListener listener) {
+        itemSelectedListener = listener;
+    }
+
+    public interface ItemSelectedListener {
+        public void onItemSelected();
     }
 }
