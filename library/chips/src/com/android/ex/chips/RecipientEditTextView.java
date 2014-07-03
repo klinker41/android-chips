@@ -18,40 +18,17 @@
 package com.android.ex.chips;
 
 import android.app.Dialog;
-import android.content.ClipData;
-import android.content.ClipDescription;
+import android.content.*;
 import android.content.ClipboardManager;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Matrix;
-import android.graphics.Paint;
-import android.graphics.Point;
-import android.graphics.Rect;
-import android.graphics.RectF;
+import android.graphics.*;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
-import android.os.Build;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.os.Parcelable;
-import android.text.Editable;
-import android.text.InputType;
-import android.text.Layout;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.SpannableStringBuilder;
-import android.text.Spanned;
-import android.text.TextPaint;
-import android.text.TextUtils;
-import android.text.TextWatcher;
+import android.net.Uri;
+import android.os.*;
+import android.text.*;
 import android.text.method.QwertyKeyListener;
 import android.text.style.ImageSpan;
 import android.text.util.Rfc822Token;
@@ -59,45 +36,19 @@ import android.text.util.Rfc822Tokenizer;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.ActionMode;
+import android.view.*;
 import android.view.ActionMode.Callback;
-import android.view.DragEvent;
-import android.view.GestureDetector;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewParent;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
-import android.widget.AdapterView;
+import android.widget.*;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Button;
-import android.widget.Filterable;
-import android.widget.ListAdapter;
-import android.widget.ListPopupWindow;
-import android.widget.ListView;
-import android.widget.MultiAutoCompleteTextView;
-import android.widget.ScrollView;
-import android.widget.TextView;
-
 import com.android.ex.chips.RecipientAlternatesAdapter.RecipientMatchCallback;
 import com.android.ex.chips.recipientchip.DrawableRecipientChip;
 import com.android.ex.chips.recipientchip.InvisibleRecipientChip;
 import com.android.ex.chips.recipientchip.VisibleRecipientChip;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -1779,6 +1730,11 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
 
     public void submitItem(String name, String number) {
         RecipientEntry entry = RecipientEntry.constructGeneratedEntry(name, number, true);
+        submitItem(entry);
+    }
+
+    public void submitItem(String name, String number, Uri imageUri) {
+        RecipientEntry entry = RecipientEntry.constructGeneratedEntry(name, number, imageUri, true);
         submitItem(entry);
     }
 

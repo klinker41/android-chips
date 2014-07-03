@@ -158,6 +158,13 @@ public class RecipientEntry {
                 isValid, null /* lookupKey */);
     }
 
+    public static RecipientEntry constructGeneratedEntry(String display, String address, Uri photoThumbnailUri,
+                                                         boolean isValid) {
+        return new RecipientEntry(ENTRY_TYPE_PERSON, display, address, INVALID_DESTINATION_TYPE,
+                null, GENERATED_CONTACT, null /* directoryId */, GENERATED_CONTACT, photoThumbnailUri, true,
+                isValid, null /* lookupKey */);
+    }
+
     public static RecipientEntry constructTopLevelEntry(String displayName, int displayNameSource,
             String destination, int destinationType, String destinationLabel, long contactId,
             Long directoryId, long dataId, Uri photoThumbnailUri, boolean isValid,
