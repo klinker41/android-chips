@@ -2288,8 +2288,9 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
         getHandler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                setText("~");
-                setSelection(1);
+                setTextColor(getCurrentHintTextColor());
+                setText("Choose Contacts:");
+                setSelection(16);
             }
         }, 250);
     }
