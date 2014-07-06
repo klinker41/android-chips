@@ -1809,7 +1809,7 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
                 .getSpans(0, getText().length(), DrawableRecipientChip.class);
         ArrayList<DrawableRecipientChip> recipientsList = new ArrayList<DrawableRecipientChip>(
                 Arrays.asList(recips));
-        recipientsList.addAll(mRemovedSpans);
+        try { recipientsList.addAll(mRemovedSpans); } catch (Exception e) {}
         return recipientsList.toArray(new DrawableRecipientChip[recipientsList.size()]);
     }
 
