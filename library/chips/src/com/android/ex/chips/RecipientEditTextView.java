@@ -1804,6 +1804,15 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
         return result;
     }
 
+    public DrawableRecipientChip[] getRecipients() {
+        DrawableRecipientChip[] recips = getSpannable()
+                .getSpans(0, getText().length(), DrawableRecipientChip.class);
+        ArrayList<DrawableRecipientChip> recipientsList = new ArrayList<DrawableRecipientChip>(
+                Arrays.asList(recips));
+        recipientsList.addAll(mRemovedSpans);
+        return recipientsList.toArray(new DrawableRecipientChip[recipientsList.size()]);
+    }
+
     public DrawableRecipientChip[] getSortedRecipients() {
         DrawableRecipientChip[] recips = getSpannable()
                 .getSpans(0, getText().length(), DrawableRecipientChip.class);
@@ -1980,8 +1989,7 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
      * Replace the more chip, if it exists, with all of the recipient chips it had
      * replaced when the RecipientEditTextView gains focus.
      */
-    // Visible for testing.
-    /*package*/ void removeMoreChip() {
+    public void removeMoreChip() {
         if (mMoreChip != null) {
             Spannable span = getSpannable();
             span.removeSpan(mMoreChip);
