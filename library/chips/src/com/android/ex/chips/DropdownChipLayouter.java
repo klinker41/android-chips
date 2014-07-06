@@ -105,7 +105,7 @@ public class DropdownChipLayouter {
         // Bind the information to the view
         bindTextToView(displayName, viewHolder.displayNameView);
         bindTextToView(destination, viewHolder.destinationView);
-        bindTextToView(destinationType, viewHolder.destinationTypeView);
+        bindTextToView("(" + destinationType + ")", viewHolder.destinationTypeView);
         bindIconToView(showImage, entry, viewHolder.imageView, type);
 
         return itemView;
