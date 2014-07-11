@@ -37,6 +37,7 @@ public class MainActivity extends Activity {
                 (RecipientEditTextView) findViewById(R.id.phone_retv);
         phoneRetv.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
         BaseRecipientAdapter adapter = new BaseRecipientAdapter(BaseRecipientAdapter.QUERY_TYPE_PHONE, this);
+        adapter.setShowMobileOnly(true);
         phoneRetv.setAdapter(adapter);
         phoneRetv.dismissDropDownOnItemSelected(true);
 

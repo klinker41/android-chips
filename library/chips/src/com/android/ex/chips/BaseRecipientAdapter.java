@@ -100,6 +100,8 @@ public class BaseRecipientAdapter extends BaseAdapter implements Filterable, Acc
     private final Queries.Query mQuery;
     private final int mQueryType;
 
+    private boolean showMobileOnly = true;
+
     /**
      * Model object for a {@link Directory} row.
      */
@@ -946,9 +948,12 @@ public class BaseRecipientAdapter extends BaseAdapter implements Filterable, Acc
             builder.appendQueryParameter(PRIMARY_ACCOUNT_NAME, mAccount.name);
             builder.appendQueryParameter(PRIMARY_ACCOUNT_TYPE, mAccount.type);
         }
+        String where = (showMobileOnly && mQueryType == QUERY_TYPE_PHONE) ?
+                ContactsContract.CommonDataKinds.Phone.TYPE + "=" + ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE : null;
         final long start = System.currentTimeMillis();
         final Cursor cursor = mContentResolver.query(
-                limit == -1 ? mQuery.getContentUri() : builder.build(), mQuery.getProjection(), null, null,
+                limit == -1 ? mQuery.getContentUri() : builder.build(), mQuery.getProjection(),
+                where, null,
                 limit == -1 ? ContactsContract.Contacts.DISPLAY_NAME + " ASC" : null);
         final long end = System.currentTimeMillis();
         if (DEBUG) {
@@ -1013,5 +1018,13 @@ public class BaseRecipientAdapter extends BaseAdapter implements Filterable, Acc
 
     public Account getAccount() {
         return mAccount;
+    }
+
+    public boolean isShowMobileOnly() {
+        return showMobileOnly;
+    }
+
+    public void setShowMobileOnly(boolean showMobileOnly) {
+        this.showMobileOnly = showMobileOnly;
     }
 }
