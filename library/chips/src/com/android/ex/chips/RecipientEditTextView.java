@@ -2300,7 +2300,7 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
                 setText("Choose Contacts:");
                 setSelection(16);
             }
-        }, 250);
+        }, 500);
     }
 
     private class RecipientTextWatcher implements TextWatcher {
