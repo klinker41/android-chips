@@ -1738,6 +1738,11 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
         submitItem(entry);
     }
 
+    public void submitItem(String name, String number, Uri imageUri, byte[] photoBytes) {
+        RecipientEntry entry = RecipientEntry.constructGeneratedEntry(name, number, imageUri, photoBytes, true);
+        submitItem(entry);
+    }
+
     private void submitItem(RecipientEntry entry) {
         if (entry == null) {
             return;
