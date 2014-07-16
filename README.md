@@ -6,7 +6,7 @@ This is a simple library based on Google's internal chips library and updated to
 
 Usage is extremely simple:
 
-```
+```java
 // creates an autocomplete for phone number contacts
 final RecipientEditTextView phoneRetv =
         (RecipientEditTextView) findViewById(R.id.phone_retv);
@@ -16,7 +16,7 @@ phoneRetv.setAdapter(new BaseRecipientAdapter(BaseRecipientAdapter.QUERY_TYPE_PH
 
 OR
 
-```
+```java
 // creates an autocomplete for email contacts
 final RecipientEditTextView emailRetv =
         (RecipientEditTextView) findViewById(R.id.email_retv);
@@ -26,7 +26,7 @@ emailRetv.setAdapter(new BaseRecipientAdapter(this));
 
 You can get all of the current chips by using:
 
-```
+```java
 DrawableRecipientChips[] chips = phoneRetv.getSortedRecipients();
 ```
 
