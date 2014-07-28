@@ -30,6 +30,14 @@ You can get all of the current chips by using:
 DrawableRecipientChips[] chips = phoneRetv.getSortedRecipients();
 ```
 
+
+## Gradle
+
+To include in your gradle project:
+
+```groovy
+compile 'com.klinkerapps:android-chips:+@aar'
+``
 ---
 
 ## License
