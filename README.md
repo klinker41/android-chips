@@ -37,7 +37,7 @@ To include in your gradle project:
 
 ```groovy
 compile 'com.klinkerapps:android-chips:+@aar'
-``
+```
 ---
 
 ## License
