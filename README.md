@@ -27,7 +27,7 @@ emailRetv.setAdapter(new BaseRecipientAdapter(this));
 You can get all of the current chips by using:
 
 ```java
-DrawableRecipientChips[] chips = phoneRetv.getSortedRecipients();
+DrawableRecipientChip[] chips = phoneRetv.getSortedRecipients();
 ```
 
 
