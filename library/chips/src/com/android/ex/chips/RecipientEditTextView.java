@@ -2430,7 +2430,7 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
         } else {
             last = s.charAt(len);
         }
-        return last == COMMIT_CHAR_COMMA || last == COMMIT_CHAR_SEMICOLON;
+        return last == COMMIT_CHAR_COMMA || last == COMMIT_CHAR_SEMICOLON || last == COMMIT_CHAR_SPACE;
     }
 
     public boolean isGeneratedContact(DrawableRecipientChip chip) {
