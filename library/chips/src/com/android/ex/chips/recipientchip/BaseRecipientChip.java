@@ -76,7 +76,7 @@ interface BaseRecipientChip {
     void setOriginalText(String text);
 
     /**
-     * Set the text in the edittextview originally associated with this chip
+     * Get the text in the edittextview originally associated with this chip
      * before any reverse lookups.
      */
     CharSequence getOriginalText();
