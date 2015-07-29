@@ -232,7 +232,7 @@ public class BaseRecipientAdapter extends BaseAdapter implements Filterable, Acc
             }
 
             if (constraint == null) {
-                constraint = "Choose Contacts:";
+                return new FilterResults();
             }
 
             final FilterResults results = new FilterResults();
@@ -240,9 +240,8 @@ public class BaseRecipientAdapter extends BaseAdapter implements Filterable, Acc
             Cursor directoryCursor = null;
             boolean limitResults = true;
 
-            if (constraint.equals("Choose Contacts:")) {
+            if (TextUtils.isEmpty(constraint)) {
                 limitResults = false;
-                constraint = " ";
             }
 
             try {

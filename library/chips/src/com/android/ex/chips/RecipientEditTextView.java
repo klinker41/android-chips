@@ -1409,6 +1409,10 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
      */
     @Override
     protected void performFiltering(CharSequence text, int keyCode) {
+        if (TextUtils.isEmpty(text)) {
+            getFilter().filter("", this);
+            return;
+        }
         boolean isCompletedToken = isCompletedToken(text);
         if (enoughToFilter() && !isCompletedToken) {
             int end = getSelectionEnd();
@@ -2296,7 +2300,6 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
     }
 
     public void showAllContacts() {
-        setThreshold(0);
         dismissDropDownOnItemSelected(false);
         getHandler().postDelayed(new Runnable() {
             @Override
@@ -2304,6 +2307,7 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
                 setTextColor(getCurrentHintTextColor());
                 setText("Choose Contacts:");
                 setSelection(16);
+                performFiltering("", 0);
             }
         }, 500);
     }
@@ -2426,7 +2430,7 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
         } else {
             last = s.charAt(len);
         }
-        return last == COMMIT_CHAR_COMMA || last == COMMIT_CHAR_SEMICOLON;
+        return last == COMMIT_CHAR_COMMA || last == COMMIT_CHAR_SEMICOLON || last == COMMIT_CHAR_SPACE;
     }
 
     public boolean isGeneratedContact(DrawableRecipientChip chip) {
