@@ -20,31 +20,36 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.MultiAutoCompleteTextView;
+import android.widget.TextView;
+
 import com.android.ex.chips.BaseRecipientAdapter;
 import com.android.ex.chips.RecipientEditTextView;
 import com.android.ex.chips.recipientchip.DrawableRecipientChip;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements View.OnClickListener {
+
+    private DrawableRecipientChip[] chips;
+    private RecipientEditTextView mView;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final RecipientEditTextView phoneRetv =
-                (RecipientEditTextView) findViewById(R.id.phone_retv);
-        phoneRetv.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
+        mView = (RecipientEditTextView) findViewById(R.id.phone_retv);
+        mView.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
         BaseRecipientAdapter adapter = new BaseRecipientAdapter(BaseRecipientAdapter.QUERY_TYPE_PHONE, this);
         adapter.setShowMobileOnly(true);
-        phoneRetv.setAdapter(adapter);
-        phoneRetv.dismissDropDownOnItemSelected(true);
+        mView.setAdapter(adapter);
+        mView.dismissDropDownOnItemSelected(true);
 
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                DrawableRecipientChip[] chips = phoneRetv.getSortedRecipients();
+                DrawableRecipientChip[] chips = mView.getSortedRecipients();
                 for (DrawableRecipientChip chip : chips) {
                     Log.v("DrawableChip", chip.getEntry().getDisplayName() + " " + chip.getEntry().getDestination());
                 }
@@ -55,9 +60,31 @@ public class MainActivity extends Activity {
         showAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                phoneRetv.showAllContacts();
+                mView.showAllContacts();
             }
         });
+
+        Button button = (Button) findViewById(R.id.save);
+        button.setOnClickListener(this);
+        Button button2 = (Button) findViewById(R.id.reload);
+        button2.setOnClickListener(this);
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.save:
+                chips = mView.getSortedRecipients();
+                if (chips != null) {
+                    TextView txt = (TextView) findViewById(R.id.saved);
+                    txt.setText("Contacts saved: " + chips.length);
+                }
+                break;
+            case R.id.reload:
+                if (chips != null) {
+                    mView.setRecipientEntries(chips);
+                }
+                break;
+        }
+    }
 }
