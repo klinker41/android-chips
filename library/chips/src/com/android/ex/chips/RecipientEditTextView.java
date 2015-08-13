@@ -1765,6 +1765,12 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
         sanitizeBetween();
     }
 
+    public void setRecipientEntries(DrawableRecipientChip[] chips) {
+        for (DrawableRecipientChip chip : chips) {
+            submitItem(chip.getEntry());
+        }
+    }
+
     private RecipientEntry createValidatedEntry(RecipientEntry item) {
         if (item == null) {
             return null;
