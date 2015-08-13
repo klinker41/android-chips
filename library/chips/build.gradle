@@ -7,16 +7,17 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:1.2.3'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.2'
-        classpath 'com.github.dcendents:android-maven-plugin:1.2'
     }
 }
 apply plugin: 'com.android.library'
 apply plugin: 'com.jfrog.bintray'
-apply plugin: 'com.github.dcendents.android-maven'
 
 dependencies {
     compile 'com.android.support:support-v4:22.2.1'
 }
+
+group = 'ca.hoogit'
+version = '1.0.3'
 
 android {
     compileSdkVersion 22
@@ -57,44 +58,11 @@ bintray {
     configurations = ['archives']
     pkg {
         repo = "maven"
-        name = "Chips"
+        name = "android-chips"
         websiteUrl = siteUrl
         vcsUrl = gitUrl
         licenses = ["Apache-2.0"]
         publish = true
-    }
-}
-
-install {
-    repositories.mavenInstaller {
-        pom {
-            project {
-                packaging 'aar'
-
-                name 'A Material design fork of googles chip library'
-                url siteUrl
-
-                licenses {
-                    license {
-                        name 'The Apache Software License, Version 2.0'
-                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                    }
-                }
-                developers {
-                    developer {
-                        id 'jordond'
-                        name 'Jordon de Hoog'
-                        email 'jordon@hoogit.ca'
-                    }
-                }
-                scm {
-                    connection gitUrl
-                    developerConnection gitUrl
-                    url siteUrl
-
-                }
-            }
-        }
     }
 }
 

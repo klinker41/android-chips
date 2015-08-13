@@ -1771,6 +1771,12 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
         }
     }
 
+    public void setRecipientEntries(List<RecipientEntry> entries) {
+        for (RecipientEntry entry : entries) {
+            submitItem(entry);
+        }
+    }
+
     private RecipientEntry createValidatedEntry(RecipientEntry item) {
         if (item == null) {
             return null;

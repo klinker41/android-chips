@@ -83,11 +83,6 @@ public class RecipientAlternatesAdapter extends CursorAdapter {
      * Get a HashMap of address to RecipientEntry that contains all contact
      * information for a contact with the provided address, if one exists. This
      * may block the UI, so run it in an async task.
-     *
-     * @param context Context.
-     * @param inAddresses Array of addresses on which to perform the lookup.
-     * @param callback RecipientMatchCallback called when a match or matches are found.
-     * @return HashMap<String,RecipientEntry>
      */
     public static void getMatchingRecipients(Context context, BaseRecipientAdapter adapter,
             ArrayList<String> inAddresses, int addressType, Account account,
