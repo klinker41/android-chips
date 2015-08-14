@@ -1,16 +1,23 @@
 buildscript {
     repositories {
+        jcenter()
         mavenCentral()
     }
+
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.12.1'
+        classpath 'com.android.tools.build:gradle:1.2.3'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.2'
     }
 }
 apply plugin: 'com.android.library'
+apply plugin: 'com.jfrog.bintray'
 
 dependencies {
-    compile 'com.android.support:support-v4:20.0.0'
+    compile 'com.android.support:support-v4:22.2.1'
 }
+
+group = 'ca.hoogit'
+version = '1.0.3'
 
 android {
     compileSdkVersion 22
@@ -38,4 +45,53 @@ android {
     }
 }
 
-apply from: 'https://raw.github.com/klinker41/gradle-mvn-push/master/gradle-mvn-push.gradle'
+def siteUrl = 'https://github.com/jordond/android-chips.git'
+def gitUrl = 'https://github.com/jordond/android-chips.git'
+
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+bintray {
+    user = properties.getProperty("bintray.user")
+    key = properties.getProperty("bintray.apikey")
+
+    configurations = ['archives']
+    pkg {
+        repo = "maven"
+        name = "android-chips"
+        websiteUrl = siteUrl
+        vcsUrl = gitUrl
+        licenses = ["Apache-2.0"]
+        publish = true
+    }
+}
+
+dependencies {
+}
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+}
+
+task findConventions << {
+    println project.getConvention()
+}
+
+task wrapper(type: Wrapper) {
+}

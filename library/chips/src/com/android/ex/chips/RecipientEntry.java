@@ -22,10 +22,12 @@ import android.provider.ContactsContract.DisplayNameSources;
 import android.text.util.Rfc822Token;
 import android.text.util.Rfc822Tokenizer;
 
+import java.io.Serializable;
+
 /**
  * Represents one entry inside recipient auto-complete list.
  */
-public class RecipientEntry {
+public class RecipientEntry implements Serializable {
     /* package */ static final int INVALID_CONTACT = -1;
     /**
      * A GENERATED_CONTACT is one that was created based entirely on
@@ -76,7 +78,6 @@ public class RecipientEntry {
      */
     private byte[] mPhotoBytes;
 
-    /** See {@link ContactsContract.Contacts#LOOKUP_KEY} */
     private final String mLookupKey;
 
     private RecipientEntry(int entryType, String displayName, String destination,
