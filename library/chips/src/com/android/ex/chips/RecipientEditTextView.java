@@ -28,6 +28,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.*;
+import android.support.annotation.IdRes;
 import android.text.*;
 import android.text.method.QwertyKeyListener;
 import android.text.style.ImageSpan;
@@ -161,6 +162,8 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
 
     private Dialog mCopyDialog;
 
+    private int mCopyDialogLayoutId;
+
     private String mCopyAddress;
 
     /**
@@ -244,6 +247,7 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
         mAlternatesPopup = new ListPopupWindow(context);
         mAddressPopup = new ListPopupWindow(context);
         mCopyDialog = new Dialog(context);
+        mCopyDialogLayoutId = R.layout.copy_chip_dialog_layout;
         mAlternatesListener = new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView,View view, int position,
@@ -2939,7 +2943,7 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
         }
         mCopyAddress = address;
         mCopyDialog.setTitle(address);
-        mCopyDialog.setContentView(R.layout.copy_chip_dialog_layout);
+        mCopyDialog.setContentView(mCopyDialogLayoutId);
         mCopyDialog.setCancelable(true);
         mCopyDialog.setCanceledOnTouchOutside(true);
         Button button = (Button)mCopyDialog.findViewById(android.R.id.button1);
@@ -2954,6 +2958,10 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
         button.setText(buttonTitle);
         mCopyDialog.setOnDismissListener(this);
         mCopyDialog.show();
+    }
+
+    public void setCopyDialogLayout(@IdRes int layoutResId) {
+        mCopyDialogLayoutId = layoutResId;
     }
 
     @Override
