@@ -13,8 +13,8 @@ dependencies {
 }
 
 android {
-    compileSdkVersion 22
-    buildToolsVersion "22.0.1"
+    compileSdkVersion 24
+    buildToolsVersion "24.0.2"
 
     sourceSets {
         main {
@@ -30,7 +30,7 @@ android {
 
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 20
+        targetSdkVersion 24
     }
 
     lintOptions {
