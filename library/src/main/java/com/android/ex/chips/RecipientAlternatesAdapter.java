@@ -87,7 +87,6 @@ public class RecipientAlternatesAdapter extends CursorAdapter {
      * @param context Context.
      * @param inAddresses Array of addresses on which to perform the lookup.
      * @param callback RecipientMatchCallback called when a match or matches are found.
-     * @return HashMap<String,RecipientEntry>
      */
     public static void getMatchingRecipients(Context context, BaseRecipientAdapter adapter,
             ArrayList<String> inAddresses, int addressType, Account account,
