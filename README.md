@@ -11,7 +11,15 @@ Usage is extremely simple:
 final RecipientEditTextView phoneRetv =
         (RecipientEditTextView) findViewById(R.id.phone_retv);
 phoneRetv.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
-phoneRetv.setAdapter(new BaseRecipientAdapter(BaseRecipientAdapter.QUERY_TYPE_PHONE, this));
+BaseRecipientAdapter baseRecipientAdapter = new BaseRecipientAdapter(BaseRecipientAdapter.QUERY_TYPE_PHONE, this);
+
+// Queries for all phone numbers. Includes phone numbers marked as "mobile" and "others".
+// If set as true, baseRecipientAdapter will query only for phone numbers marked as "mobile".  
+baseRecipientAdapter.setShowMobileOnly(false);
+
+phoneRetv.setAdapter(baseRecipientAdapter);
+
+
 ```
 
 OR
