@@ -28,6 +28,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.*;
+import android.support.annotation.IdRes;
 import android.text.*;
 import android.text.method.QwertyKeyListener;
 import android.text.style.ImageSpan;
@@ -161,6 +162,8 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
 
     private Dialog mCopyDialog;
 
+    private int mCopyDialogLayoutId;
+
     private String mCopyAddress;
 
     /**
@@ -233,6 +236,8 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
 
     private ItemSelectedListener itemSelectedListener;
 
+    private boolean mShowActionMode = true;
+
     public RecipientEditTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
         setChipDimensions(context, attrs);
@@ -242,6 +247,7 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
         mAlternatesPopup = new ListPopupWindow(context);
         mAddressPopup = new ListPopupWindow(context);
         mCopyDialog = new Dialog(context);
+        mCopyDialogLayoutId = R.layout.copy_chip_dialog_layout;
         mAlternatesListener = new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView,View view, int position,
@@ -1473,9 +1479,7 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
         boolean handled = super.onTouchEvent(event);
         int action = event.getAction();
         boolean chipWasSelected = false;
-        if (mSelectedChip == null) {
-            mGestureDetector.onTouchEvent(event);
-        }
+        mGestureDetector.onTouchEvent(event);
         if (mCopyAddress == null && action == MotionEvent.ACTION_UP) {
             float x = event.getX();
             float y = event.getY();
@@ -1871,7 +1875,7 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
      */
     @Override
     public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-        return false;
+        return mShowActionMode;
     }
 
     // Visible for testing.
@@ -2063,7 +2067,8 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
             int spanStart = spannable.getSpanStart(currentChip);
             int spanEnd = spannable.getSpanEnd(currentChip);
             spannable.removeSpan(currentChip);
-            editable.delete(spanStart, spanEnd);
+            // Eliminate the space that is auto placed on each chip: spanEnd + 1
+            editable.delete(spanStart, spanEnd + 1);
             setCursorVisible(true);
             setSelection(editable.length());
             editable.append(text);
@@ -2459,7 +2464,7 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
                     int end = getSelectionEnd();
                     Editable editable = getText();
                     if (start >= 0 && end >= 0 && start != end) {
-                        editable.append(paste, start, end);
+                        editable.replace(start, end, paste);
                     } else {
                         editable.insert(end, paste);
                     }
@@ -2814,21 +2819,23 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
 
     @Override
     public void onLongPress(MotionEvent event) {
-        if (mSelectedChip != null) {
-            return;
-        }
         float x = event.getX();
         float y = event.getY();
         final int offset = putOffsetInRange(x, y);
         DrawableRecipientChip currentChip = findChip(offset);
         if (currentChip != null) {
             if (mDragEnabled) {
+                mShowActionMode = false;
                 // Start drag-and-drop for the selected chip.
                 startDrag(currentChip);
             } else {
+                mShowActionMode = false;
                 // Copy the selected chip email address.
                 showCopyDialog(currentChip.getEntry().getDestination());
             }
+        } else {
+            // Show Android's Cut/Paste box
+            mShowActionMode = true;
         }
     }
 
@@ -2936,7 +2943,7 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
         }
         mCopyAddress = address;
         mCopyDialog.setTitle(address);
-        mCopyDialog.setContentView(R.layout.copy_chip_dialog_layout);
+        mCopyDialog.setContentView(mCopyDialogLayoutId);
         mCopyDialog.setCancelable(true);
         mCopyDialog.setCanceledOnTouchOutside(true);
         Button button = (Button)mCopyDialog.findViewById(android.R.id.button1);
@@ -2951,6 +2958,10 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
         button.setText(buttonTitle);
         mCopyDialog.setOnDismissListener(this);
         mCopyDialog.show();
+    }
+
+    public void setCopyDialogLayout(@IdRes int layoutResId) {
+        mCopyDialogLayoutId = layoutResId;
     }
 
     @Override
