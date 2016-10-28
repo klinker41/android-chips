@@ -1,0 +1,41 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.1.0'
+    }
+}
+apply plugin: 'com.android.library'
+
+dependencies {
+    compile 'com.android.support:support-v4:20.0.0'
+}
+
+android {
+    compileSdkVersion 22
+    buildToolsVersion "22.0.1"
+
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+            java.srcDirs = ['src']
+            resources.srcDirs = ['src']
+            aidl.srcDirs = ['src']
+            renderscript.srcDirs = ['src']
+            res.srcDirs = ['res']
+            assets.srcDirs = ['assets']
+        }
+    }
+
+    defaultConfig {
+        minSdkVersion 14
+        targetSdkVersion 20
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+}
+
+apply from: 'https://raw.github.com/klinker41/gradle-mvn-push/master/gradle-mvn-push.gradle'
