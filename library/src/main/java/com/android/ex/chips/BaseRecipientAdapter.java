@@ -1001,7 +1001,11 @@ public class BaseRecipientAdapter extends BaseAdapter implements Filterable, Acc
 
     @Override
     public boolean isEnabled(int position) {
-        return getEntries().get(position).isSelectable();
+        if (getEntries().isEmpty()) {
+            return false;
+        } else {
+            return getEntries().get(position).isSelectable();
+        }
     }
 
     @Override
