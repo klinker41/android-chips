@@ -2,8 +2,6 @@
 
 ![Screenshot](screenshot.png)
 
-If you are trying to run the sample on a device with Marshmallow+, you will have to enable permissions to access contacts manually. The library doesn't handle it for you. Go to system settings, find the sample app, and accept the contacts permission, then you will be able to query your contacts with the sample app.
-
 This is a simple library based on Google's internal chips library and updated to have visuals reflecting the newly released "Material Design" standard as seen [here](http://www.google.com/design/spec/components/chips-tokens.html#chips-tokens-contact-chips).
 
 Usage is extremely simple:
