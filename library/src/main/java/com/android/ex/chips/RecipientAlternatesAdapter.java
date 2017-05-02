@@ -127,6 +127,8 @@ public class RecipientAlternatesAdapter extends CursorAdapter {
                             + bindString.toString() + ")", addressArray, null);
             recipientEntries = processContactEntries(c, null /* directoryId */);
             callback.matchesFound(recipientEntries);
+        } catch(Exception ignored){
+            return;
         } finally {
             if (c != null) {
                 c.close();
