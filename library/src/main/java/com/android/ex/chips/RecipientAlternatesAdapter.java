@@ -127,6 +127,8 @@ public class RecipientAlternatesAdapter extends CursorAdapter {
                             + bindString.toString() + ")", addressArray, null);
             recipientEntries = processContactEntries(c, null /* directoryId */);
             callback.matchesFound(recipientEntries);
+        } catch(Exception ignored){
+            return;
         } finally {
             if (c != null) {
                 c.close();
@@ -216,9 +218,23 @@ public class RecipientAlternatesAdapter extends CursorAdapter {
         callback.matchesNotFound(matchesNotFound);
     }
 
+    private static class CaseInsensitiveMap extends HashMap<String, RecipientEntry> {
+
+        @Override
+        public RecipientEntry put(String key, RecipientEntry value) {
+            return super.put(key.toLowerCase(), value);
+        }
+
+        @Override
+        public RecipientEntry get(Object key) {
+            return super.get(String.valueOf(key).toLowerCase());
+        }
+
+    }
+
     private static HashMap<String, RecipientEntry> processContactEntries(Cursor c,
             Long directoryId) {
-        HashMap<String, RecipientEntry> recipientEntries = new HashMap<String, RecipientEntry>();
+        HashMap<String, RecipientEntry> recipientEntries = new CaseInsensitiveMap();
         if (c != null && c.moveToFirst()) {
             do {
                 String address = c.getString(Queries.Query.DESTINATION);

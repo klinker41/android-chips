@@ -17,6 +17,7 @@
 
 package com.android.ex.chips;
 
+import android.accounts.Account;
 import android.app.Dialog;
 import android.content.*;
 import android.content.ClipboardManager;
@@ -652,30 +653,21 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
     private Bitmap getAvatarIcon(RecipientEntry contact) {
         // Don't draw photos for recipients that have been typed in OR generated on the fly.
         long contactId = contact.getContactId();
-        boolean drawPhotos = isPhoneQuery() ?
-                contactId != RecipientEntry.INVALID_CONTACT
-                : (contactId != RecipientEntry.INVALID_CONTACT
-                        && (contactId != RecipientEntry.GENERATED_CONTACT &&
-                                !TextUtils.isEmpty(contact.getDisplayName())));
 
-        if (drawPhotos) {
-            byte[] photoBytes = contact.getPhotoBytes();
-            // There may not be a photo yet if anything but the first contact address
-            // was selected.
-            if (photoBytes == null && contact.getPhotoThumbnailUri() != null) {
-                // TODO: cache this in the recipient entry?
-                getAdapter().fetchPhoto(contact, contact.getPhotoThumbnailUri(), getContext().getContentResolver());
-                photoBytes = contact.getPhotoBytes();
-            }
-            if (photoBytes != null) {
-                return BitmapFactory.decodeByteArray(photoBytes, 0, photoBytes.length);
-            } else {
-                // TODO: can the scaled down default photo be cached?
-                return mDefaultContactPhoto;
-            }
+        byte[] photoBytes = contact.getPhotoBytes();
+        // There may not be a photo yet if anything but the first contact address
+        // was selected.
+        if (photoBytes == null && contact.getPhotoThumbnailUri() != null) {
+            // TODO: cache this in the recipient entry?
+            getAdapter().fetchPhoto(contact, contact.getPhotoThumbnailUri(), getContext().getContentResolver());
+            photoBytes = contact.getPhotoBytes();
         }
-
-        return null;
+        if (photoBytes != null) {
+            return BitmapFactory.decodeByteArray(photoBytes, 0, photoBytes.length);
+        } else {
+            // TODO: can the scaled down default photo be cached?
+            return mDefaultContactPhoto;
+        }
     }
 
     /**
@@ -2632,8 +2624,9 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
                 }
             }
             final BaseRecipientAdapter adapter = getAdapter();
+            Account account = adapter!=null ? adapter.getAccount() : null;
             RecipientAlternatesAdapter.getMatchingRecipients(getContext(), adapter, addresses,
-                    adapter.getAccount(), new RecipientMatchCallback() {
+                    account, new RecipientMatchCallback() {
                         @Override
                         public void matchesFound(Map<String, RecipientEntry> entries) {
                             final ArrayList<DrawableRecipientChip> replacements =
@@ -2760,8 +2753,9 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
                 }
             }
             final BaseRecipientAdapter adapter = getAdapter();
+            Account account = adapter!=null ? adapter.getAccount() : null;
             RecipientAlternatesAdapter.getMatchingRecipients(getContext(), adapter, addresses,
-                    adapter.getAccount(),
+                    account,
                     new RecipientMatchCallback() {
 
                         @Override
