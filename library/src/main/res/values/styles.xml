@@ -15,7 +15,7 @@
 -->
 <resources xmlns:tools="http://schemas.android.com/tools"
            xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <style name="RecipientEditTextView" parent="@android:attr/autoCompleteTextViewStyle">
+    <style name="RecipientEditTextView" parent="@android:style/Widget.AutoCompleteTextView">
         <item name="android:inputType">textEmailAddress|textMultiLine</item>
         <item name="android:imeOptions">actionNext|flagNoFullscreen</item>
         <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
