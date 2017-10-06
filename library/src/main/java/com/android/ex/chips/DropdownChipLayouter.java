@@ -180,7 +180,8 @@ public class DropdownChipLayouter {
                         // as it may be too slow to get immediately.
                         view.setImageURI(thumbnailUri);
                     } else {
-                        view.setImageResource(getDefaultPhotoResId());
+                        final Bitmap photo = ContactImageCreator.getLetterPicture(mContext, entry);
+                        view.setImageBitmap(photo);
                     }
                     break;
                 case SINGLE_RECIPIENT:

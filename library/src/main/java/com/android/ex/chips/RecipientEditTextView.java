@@ -666,7 +666,7 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
             return BitmapFactory.decodeByteArray(photoBytes, 0, photoBytes.length);
         } else {
             // TODO: can the scaled down default photo be cached?
-            return mDefaultContactPhoto;
+            return ContactImageCreator.getLetterPicture(getContext(), contact);
         }
     }
 
