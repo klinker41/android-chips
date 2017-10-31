@@ -16,6 +16,7 @@
 
 package com.android.ex.chips;
 
+import android.content.Context;
 import android.net.Uri;
 import android.provider.ContactsContract.CommonDataKinds.Email;
 import android.provider.ContactsContract.DisplayNameSources;
@@ -263,6 +264,10 @@ public class RecipientEntry {
 
     public String getLookupKey() {
         return mLookupKey;
+    }
+
+    public int getBackgroundColor(Context context) {
+        return ContactImageCreator.getBackgroundColorForContact(context, getDisplayName());
     }
 
     @Override

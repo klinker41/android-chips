@@ -132,8 +132,6 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
 
     private DrawableRecipientChip mSelectedChip;
 
-    private Bitmap mDefaultContactPhoto;
-
     private ImageSpan mMoreChip;
 
     private TextView mMoreItem;
@@ -666,7 +664,7 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
             return BitmapFactory.decodeByteArray(photoBytes, 0, photoBytes.length);
         } else {
             // TODO: can the scaled down default photo be cached?
-            return mDefaultContactPhoto;
+            return ContactImageCreator.getLetterPicture(getContext(), contact);
         }
     }
 
@@ -784,8 +782,6 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
         if (mChipPadding == -1) {
             mChipPadding = (int) r.getDimension(R.dimen.chip_padding);
         }
-
-        mDefaultContactPhoto = BitmapFactory.decodeResource(r, R.drawable.ic_contact_picture);
 
         mMoreItem = (TextView) LayoutInflater.from(getContext()).inflate(R.layout.more_item, null);
 

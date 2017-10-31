@@ -44,7 +44,7 @@ DrawableRecipientChip[] chips = phoneRetv.getSortedRecipients();
 To include in your gradle project:
 
 ```groovy
-compile 'com.klinkerapps:android-chips:1.1.2@aar'
+compile 'com.klinkerapps:android-chips:1.2.0@aar'
 ```
 ---
 
