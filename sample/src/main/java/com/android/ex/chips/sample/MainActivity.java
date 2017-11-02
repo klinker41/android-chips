@@ -28,6 +28,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.MultiAutoCompleteTextView;
+import android.widget.Toast;
+
 import com.android.ex.chips.BaseRecipientAdapter;
 import com.android.ex.chips.RecipientEditTextView;
 import com.android.ex.chips.recipientchip.DrawableRecipientChip;
@@ -50,6 +52,13 @@ public class MainActivity extends AppCompatActivity {
 
         final RecipientEditTextView phoneRetv =
                 (RecipientEditTextView) findViewById(R.id.phone_retv);
+        phoneRetv.setMaxChips(3);
+        phoneRetv.setChipNotCreatedListener(new RecipientEditTextView.ChipNotCreatedListener() {
+            @Override
+            public void chipNotCreated() {
+                Toast.makeText(MainActivity.this, "You can only have three recipients", Toast.LENGTH_SHORT).show();
+            }
+        });
         phoneRetv.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
         BaseRecipientAdapter adapter = new BaseRecipientAdapter(BaseRecipientAdapter.QUERY_TYPE_PHONE, this);
         adapter.setShowMobileOnly(true);

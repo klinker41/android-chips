@@ -145,6 +145,8 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
 
     private boolean mNoChips = false;
 
+    private int mMaxChips = 1000;
+
     private ListPopupWindow mAlternatesPopup;
 
     private ListPopupWindow mAddressPopup;
@@ -170,6 +172,8 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
      * selected chip.
      */
     private OnItemClickListener mAlternatesListener;
+
+    private ChipNotCreatedListener mChipNotCreatedListener;
 
     private int mCheckedItem;
 
@@ -1259,7 +1263,14 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
                     QwertyKeyListener.markAsReplaced(editable, start, end, "");
                     CharSequence chipText = createChip(entry, false);
                     if (chipText != null && start > -1 && end > -1) {
-                        editable.replace(start, end, chipText);
+                        if (getRecipients().length < mMaxChips) {
+                            editable.replace(start, end, chipText);
+                        }else {
+                            editable.replace(start, end, "");
+                            if (mChipNotCreatedListener != null) {
+                                mChipNotCreatedListener.chipNotCreated();
+                            }
+                        }
                     }
                 }
                 // Only dismiss the dropdown if it is related to the text we
@@ -3010,7 +3021,23 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
         itemSelectedListener = listener;
     }
 
+    public void setChipNotCreatedListener(ChipNotCreatedListener chipNotCreatedListener) {
+        mChipNotCreatedListener = chipNotCreatedListener;
+    }
+
+    public void setMaxChips(int maxChips) {
+        mMaxChips = maxChips;
+    }
+
+    public int getMaxChips() {
+        return mMaxChips;
+    }
+
     public interface ItemSelectedListener {
         public void onItemSelected();
+    }
+
+    public interface ChipNotCreatedListener {
+        public void chipNotCreated();
     }
 }
