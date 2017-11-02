@@ -1265,7 +1265,7 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
                     if (chipText != null && start > -1 && end > -1) {
                         if (getRecipients().length < mMaxChips) {
                             editable.replace(start, end, chipText);
-                        }else {
+                        } else {
                             editable.replace(start, end, "");
                             if (mChipNotCreatedListener != null) {
                                 mChipNotCreatedListener.chipNotCreated(text);
@@ -1754,18 +1754,24 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
         if (entry == null) {
             return;
         }
+
         clearComposingText();
 
-        int end = getSelectionEnd();
-        int start = mTokenizer.findTokenStart(getText(), end);
+        if (getRecipients().length < mMaxChips) {
+            int end = getSelectionEnd();
+            int start = mTokenizer.findTokenStart(getText(), end);
 
-        Editable editable = getText();
-        QwertyKeyListener.markAsReplaced(editable, start, end, "");
-        CharSequence chip = createChip(entry, false);
-        if (chip != null && start >= 0 && end >= 0) {
-            editable.replace(start, end, chip);
+            Editable editable = getText();
+            QwertyKeyListener.markAsReplaced(editable, start, end, "");
+            CharSequence chip = createChip(entry, false);
+            if (chip != null && start >= 0 && end >= 0) {
+                editable.replace(start, end, chip);
+            }
+            sanitizeBetween();
+        } else if (mChipNotCreatedListener != null) {
+            mChipNotCreatedListener.chipNotCreated(entry.getDisplayName());
+            sanitizeBetween();
         }
-        sanitizeBetween();
     }
 
 	public void addRecipient(RecipientEntry entry) {
