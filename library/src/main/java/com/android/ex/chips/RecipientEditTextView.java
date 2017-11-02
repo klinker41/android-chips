@@ -1268,7 +1268,7 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
                         }else {
                             editable.replace(start, end, "");
                             if (mChipNotCreatedListener != null) {
-                                mChipNotCreatedListener.chipNotCreated();
+                                mChipNotCreatedListener.chipNotCreated(text);
                             }
                         }
                     }
@@ -3038,6 +3038,6 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
     }
 
     public interface ChipNotCreatedListener {
-        public void chipNotCreated();
+        public void chipNotCreated(String chipText);
     }
 }

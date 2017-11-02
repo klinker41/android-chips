@@ -55,8 +55,8 @@ public class MainActivity extends AppCompatActivity {
         phoneRetv.setMaxChips(3);
         phoneRetv.setChipNotCreatedListener(new RecipientEditTextView.ChipNotCreatedListener() {
             @Override
-            public void chipNotCreated() {
-                Toast.makeText(MainActivity.this, "You can only have three recipients", Toast.LENGTH_SHORT).show();
+            public void chipNotCreated(String chipText) {
+                Toast.makeText(MainActivity.this, "Chip not created for: " + chipText, Toast.LENGTH_SHORT).show();
             }
         });
         phoneRetv.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
