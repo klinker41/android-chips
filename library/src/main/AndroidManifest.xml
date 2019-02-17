@@ -14,11 +14,6 @@
      limitations under the License.
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.android.ex.chips"
-          android:versionCode="1">
-
-    <uses-sdk
-        android:minSdkVersion="11"
-        android:targetSdkVersion="19" />
+          package="com.android.ex.chips" >
 
 </manifest>
