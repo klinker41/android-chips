@@ -358,6 +358,16 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
     }
 
     @Override
+    public void setSelection(int start) {
+        // no-op
+    }
+
+    @Override
+    public void setSelection(int start, int end) {
+        // no-op
+    }
+
+    @Override
     public void onRestoreInstanceState(Parcelable state) {
         if (!TextUtils.isEmpty(getText())) {
             super.onRestoreInstanceState(null);
@@ -2105,7 +2115,7 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
             if (shouldShowEditableText(newChip)) {
                 scrollLineIntoView(getLayout().getLineForOffset(getChipStart(newChip)));
             }
-            showAddress(newChip, mAddressPopup, getWidth());
+//            showAddress(newChip, mAddressPopup, getWidth());
             setCursorVisible(false);
             return newChip;
         } else {
@@ -2130,7 +2140,7 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
             if (shouldShowEditableText(newChip)) {
                 scrollLineIntoView(getLayout().getLineForOffset(getChipStart(newChip)));
             }
-            showAlternates(newChip, mAlternatesPopup, getWidth());
+//            showAlternates(newChip, mAlternatesPopup, getWidth());
             setCursorVisible(false);
             return newChip;
         }
